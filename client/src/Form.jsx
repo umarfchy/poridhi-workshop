@@ -5,6 +5,7 @@ export const Form = ({ setUserInput, handleSubmit }) => {
       onSubmit={(e) => {
         e.preventDefault();
         handleSubmit();
+        setUserInput("");
       }}
     >
       <input

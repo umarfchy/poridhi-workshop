@@ -1,20 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Form } from "./Form";
 import { News } from "./News";
+import { getNews, createNews } from "../lib/db";
 
 const App = () => {
-  const [newsList, setNewsList] = useState(newsData);
+  const [newsList, setNewsList] = useState([]);
   const [userInput, setUserInput] = useState("");
 
-  // handle form submit
-  const handleSubmit = () => {
-    const latestNewsList = [
-      ...newsList,
-      { id: newsList.length + 1, text: userInput },
-    ];
+  // set news on first render
+  useEffect(() => {
+    getNews()
+      .then((news) => setNewsList(news))
+      .catch((error) => console.error(error));
+  }, []);
 
-    setNewsList(latestNewsList);
-    setUserInput("");
+  // handle form submit
+  const handleSubmit = async () => {
+    try {
+      await createNews(userInput);
+      const latesetNewsList = await getNews();
+      setNewsList(latesetNewsList);
+    } catch (error) {
+      console.error("Error creating news: ", error);
+    }
   };
 
   return (
