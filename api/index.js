@@ -1,18 +1,8 @@
 "use strict";
 import express from "express";
 import cors from "cors";
-
-// configs
-const PORT =  5000;
-
-// dummy data
-const newsData = [
-  { id: 1, text: "lorem ipsum dolor sit amet" },
-  { id: 2, text: "consectetur adipisicing elit" },
-  { id: 3, text: "laudantium esse eum ex qui" },
-  { id: 4, text: "fugiat facilis similique illum" },
-  { id: 5, text: "aliquid, tempora et excepturi" },
-];
+import mysql from "mysql2/promise";
+import { PORT, dbConfigs } from "./configs.js";
 
 // base express app
 const app = express();
@@ -24,14 +14,32 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (_, res) => res.status(200).send("Hello World!"));
 
 // '/get' endpoint to get all news
-app.get("/get", (_, res) => res.status(200).send(newsData));
+app.get("/get", async (_, res) => {
+  try {
+    // connect to mysql
+    const query = "";
+    const connection = await mysql.createConnection(dbConfigs);
+    const [data, fields] = await connection.execute(query);
+    await connection.end();
+    res.status(200).send(data);
+  } catch (error) {
+    res.status(500).send({ message: "Error getting news" });
+  }
+});
 
 // set '/create' endpoint to create a new news
-app.post("/create", (req, res) => {
-  const { text } = req.body;
-  const id = newsData.length + 1;
-  newsData.push({ id, text });
-  res.status(201).send({ message: "News created successfully" });
+app.post("/create", async (req, res) => {
+  try {
+    const { text } = req.body;
+    // insert new entry into db
+    const query = "";
+    const connection = await mysql.createConnection(dbConfigs);
+    await connection.execute(query);
+    await connection.end();
+    res.status(201).send({ message: "News created successfully" });
+  } catch (error) {
+    res.status(500).send({ message: "Error creating news" });
+  }
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
