@@ -1,5 +1,5 @@
 // dummy data
-const newsList = [
+const newsData = [
   { id: 1, text: "lorem ipsum dolor sit amet" },
   { id: 2, text: "consectetur adipisicing elit" },
   { id: 3, text: "laudantium esse eum ex qui" },
