@@ -2,6 +2,9 @@
 
 import express from "express";
 
+// configs
+const PORT = 5000;
+
 // dummy data
 const newsData = [
   { id: 1, text: "lorem ipsum dolor sit amet" },
@@ -23,3 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 // '/get' endpoint to get all news
 
 // set '/create' endpoint to create a new news
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
