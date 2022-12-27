@@ -1,8 +1,8 @@
 "use strict";
 import express from "express";
 import cors from "cors";
-import mysql from "mysql2/promise";
-import { PORT, dbConfigs } from "./configs.js";
+import { PORT } from "./configs.js";
+import { addNewsToDB, getNewsFromDB } from "./db.js";
 
 // base express app
 const app = express();
@@ -16,11 +16,7 @@ app.get("/", (_, res) => res.status(200).send("Hello World!"));
 // '/get' endpoint to get all news
 app.get("/get", async (_, res) => {
   try {
-    // connect to mysql
-    const query = "";
-    const connection = await mysql.createConnection(dbConfigs);
-    const [data, fields] = await connection.execute(query);
-    await connection.end();
+    const data = await getNewsFromDB();
     res.status(200).send(data);
   } catch (error) {
     res.status(500).send({ message: "Error getting news" });
@@ -31,11 +27,7 @@ app.get("/get", async (_, res) => {
 app.post("/create", async (req, res) => {
   try {
     const { text } = req.body;
-    // insert new entry into db
-    const query = "";
-    const connection = await mysql.createConnection(dbConfigs);
-    await connection.execute(query);
-    await connection.end();
+    await addNewsToDB(text);
     res.status(201).send({ message: "News created successfully" });
   } catch (error) {
     res.status(500).send({ message: "Error creating news" });
