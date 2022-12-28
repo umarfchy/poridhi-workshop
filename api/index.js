@@ -2,12 +2,8 @@
 import express from "express";
 import cors from "cors";
 import { PORT } from "./configs.js";
-import { addNewsToDB, getNewsFromDB } from "./db.js";
-import {
-  addNewsToCache,
-  getNewsFromCache,
-  deleteNewsFromCache,
-} from "./redis.js";
+import { getNewsFromDB } from "./db.js";
+import { addNewsToCache, getNewsFromCache, publishNews } from "./redis.js";
 
 // base express app
 const app = express();
@@ -38,8 +34,7 @@ app.get("/get", async (_, res) => {
 app.post("/create", async (req, res) => {
   try {
     const { text } = req.body;
-    await addNewsToDB(text);
-    await deleteNewsFromCache();
+    await publishNews(text);
     res.status(201).send({ message: "News created successfully" });
   } catch (error) {
     res.status(500).send({ message: "Error creating news" });

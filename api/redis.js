@@ -1,5 +1,5 @@
 "use strict";
-import { redisConfigs } from "./configs.js";
+import { redisConfigs, redisChannel } from "./configs.js";
 import { createClient } from "redis";
 
 // create redis client
@@ -23,3 +23,9 @@ export const deleteNewsFromCache = async () => {
   await redisClient.del("news");
   await redisClient.disconnect();
 };
+
+export const publishNews = async (news) => {
+  await redisClient.connect();
+  await redisClient.publish(redisChannel, news);
+  await redisClient.disconnect();
+}

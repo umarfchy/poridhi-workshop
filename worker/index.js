@@ -4,10 +4,10 @@ import { redisChannel } from "./configs.js";
 import { getNewsAnalysis } from "./helper.js";
 import { deleteNewsFromCache, redisClient } from "./redis.js";
 
-const expensiveWorker = async (latestNews) => {
+const expensiveWorker = async (newsText) => {
   try {
-    const newsAnalysis = getNewsAnalysis(latestNews);
-    await addNewsToDB(newsAnalysis);
+    const newsTextAnalysis = getNewsAnalysis(newsText);
+    await addNewsToDB(newsTextAnalysis);
     await deleteNewsFromCache();
   } catch (error) {
     console.log({ error });
@@ -30,7 +30,7 @@ const main = async () => {
     console.log("\n subscriber is ready \n");
     // call back fn is required
     subscriber.subscribe(redisChannel, async (message) => {
-      console.log("message from worker service:- ", message);
+      console.log(`\n message from worker service:-  ${message} \n`);
 
       await expensiveWorker(message);
     });
