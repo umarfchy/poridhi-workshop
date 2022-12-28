@@ -10,10 +10,18 @@ const sqlPassword = process.env.MYSQL_PASSWORD || "mypassword";
 const sqlDatabase = process.env.MYSQL_DATABASE || "mydb";
 export const sqlTable = process.env.MYSQL_TABLE || "mytable";
 
-// configs
 export const dbConfigs = {
   host: sqlHost,
   user: sqlUser,
   password: sqlPassword,
   database: sqlDatabase,
 };
+
+// redis configs
+const redisUsername = process.env.REDIS_USERNAME || "";
+const redisPassword = process.env.REDIS_PASSWORD || "mypassword";
+const redisHost = process.env.REDIS_HOST || "localhost";
+const redisPort = process.env.REDIS_PORT || "6379";
+
+const redisUrl = `redis://${redisUsername}:${redisPassword}@${redisHost}:${redisPort}`;
+export const redisConfigs = { url: redisUrl };
