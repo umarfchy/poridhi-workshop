@@ -83,8 +83,12 @@ services:
     container_name: nginx_server
     ports:
       - ${NGINX_EXTERNAL_PORT}:${NGINX_INTERNAL_PORT}
+    environment:
+      - CLIENT_APP_INTERNAL_PORT=${CLIENT_APP_INTERNAL_PORT}
+      - API_SERVER_INTERNAL_PORT=${API_SERVER_INTERNAL_PORT}
+
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
     networks:
       - mynetwork
     depends_on:
