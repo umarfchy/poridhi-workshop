@@ -89,7 +89,7 @@ services:
     networks:
       - mynetwork
     depends_on:
-      - client
+      - client-service
       - api-service
 
 networks:
