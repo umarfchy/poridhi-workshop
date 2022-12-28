@@ -10,6 +10,6 @@ POST http://localhost:5000/create
 Content-Type: application/json
 
 {
-  "text": "quickly serve the news"
+  "text": "quickly serve the news 5"
 }
 
