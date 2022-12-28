@@ -1,16 +1,19 @@
 import { useState, useEffect } from "react";
 import { Form } from "./Form";
-import { News } from "./News";
 import { getNews, createNews } from "../lib/db";
+import { News } from "./News";
 
 const App = () => {
   const [newsList, setNewsList] = useState([]);
+  const [isCache, setIsCache] = useState(false);
   const [userInput, setUserInput] = useState("");
-
   // set news on first render
   useEffect(() => {
     getNews()
-      .then((news) => setNewsList(news))
+      .then(({ isCached, news }) => {
+        setNewsList(news);
+        setIsCache(isCached);
+      })
       .catch((error) => console.error(error));
   }, []);
 
@@ -18,11 +21,18 @@ const App = () => {
   const handleSubmit = async () => {
     try {
       await createNews(userInput);
-      const latesetNewsList = await getNews();
-      setNewsList(latesetNewsList);
+      const { isCached, news } = await getNews();
+      setNewsList(news);
+      setIsCache(isCached);
     } catch (error) {
       console.error("Error creating news: ", error);
     }
+  };
+
+  const handleRefresh = async () => {
+    const { isCached, news } = await getNews();
+    setNewsList(news);
+    setIsCache(isCached);
   };
 
   return (
@@ -31,13 +41,14 @@ const App = () => {
         <Form setUserInput={setUserInput} handleSubmit={handleSubmit} />
       </section>
       <section>
-        <h3 className="text-2xl font-bold text-center">
-          News List{" "}
-          <span className="text-sm text-gray-500">({newsList.length})</span>
-        </h3>
-        {newsList.map((news) => (
-          <News key={news.id} text={news.text} />
-        ))}
+        {/* center the following button with news component */}
+        <button
+          className="block mx-auto mb-5 px-2 py-1 bg-gray-500 text-white rounded-md"
+          onClick={handleRefresh}
+        >
+          ↻ Refresh
+        </button>
+        <News newsList={newsList} isCache={isCache} />
       </section>
     </main>
   );

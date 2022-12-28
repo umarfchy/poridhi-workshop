@@ -25,10 +25,10 @@ app.get("/get", async (_, res) => {
     const cachedNews = await getNewsFromCache();
     if (!cachedNews) {
       const news = await getNewsFromDB();
-      res.status(200).send({ isCached: false, data: news });
+      res.status(200).send({ isCached: false, news: news });
       return await addNewsToCache(news);
     }
-    res.status(200).send({ isCached: true, data: cachedNews });
+    res.status(200).send({ isCached: true, news: cachedNews });
   } catch (error) {
     res.status(500).send({ message: "Error getting news" });
   }
