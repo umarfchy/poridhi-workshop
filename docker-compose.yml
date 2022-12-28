@@ -40,7 +40,7 @@ services:
 
   worker-service:
     container_name: "worker"
-    build: ./worker-server/.
+    build: ./worker/.
     environment:
       - PORT=5002
       - REDIS_PASSWORD=${REDIS_PASSWORD}
