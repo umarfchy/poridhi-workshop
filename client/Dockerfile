@@ -14,6 +14,11 @@ RUN yarn install
 
 # Copying rest of the file in image's working directory
 COPY . .
+
+# set arguements
+ARG VITE_API_URL
+ENV VITE_API_URL=${VITE_API_URL}
+
 # Building the assets
 RUN yarn build
 
