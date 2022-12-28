@@ -79,8 +79,10 @@ services:
       - mynetwork
 
   nginx:
-    image: nginx:stable-alpine
     container_name: nginx_server
+    build:
+      context: ./nginx/.
+      dockerfile: Dockerfile
     ports:
       - ${NGINX_EXTERNAL_PORT}:${NGINX_INTERNAL_PORT}
     environment:

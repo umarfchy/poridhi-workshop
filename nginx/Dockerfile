@@ -1,7 +1,6 @@
-FROM nginx:1.15-alpine
+FROM nginx:stable-alpine
+COPY ./conf/nginx.conf.template /nginx.conf.template
+# ENV CLIENT_APP_INTERNAL_PORT 'localhost'
+# ENV API_SERVER_INTERNAL_PORT 'localhost'
 
-COPY ./conf/nginx.conf.template /etc/nginx/conf.d/default.conf.template
-
-COPY docker-entrypoint.sh /
-ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["/bin/sh" , "-c" , "envsubst < /nginx.conf.template > /etc/nginx/nginx.conf && exec nginx -g 'daemon off;'"]
