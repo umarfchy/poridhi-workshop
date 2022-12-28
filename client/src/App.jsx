@@ -29,6 +29,7 @@ const App = () => {
     }
   };
 
+  // handle refresh button click
   const handleRefresh = async () => {
     const { isCached, news } = await getNews();
     setNewsList(news);
@@ -41,7 +42,6 @@ const App = () => {
         <Form setUserInput={setUserInput} handleSubmit={handleSubmit} />
       </section>
       <section>
-        {/* center the following button with news component */}
         <button
           className="block mx-auto mb-5 px-2 py-1 bg-gray-500 text-white rounded-md"
           onClick={handleRefresh}
