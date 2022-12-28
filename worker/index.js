@@ -2,7 +2,7 @@
 import { addNewsToDB } from "./db.js";
 import { redisChannel } from "./configs.js";
 import { getNewsAnalysis } from "./helper.js";
-import { deleteNewsFromCache } from "./redis.js";
+import { deleteNewsFromCache, redisClient } from "./redis.js";
 
 const expensiveWorker = async (latestNews) => {
   try {
@@ -15,7 +15,7 @@ const expensiveWorker = async (latestNews) => {
 };
 
 const main = async () => {
-  const subscriber = createClient({ url: redisUrl });
+  const subscriber = redisClient.duplicate();
   subscriber.connect();
 
   subscriber.on("error", (err) => {
