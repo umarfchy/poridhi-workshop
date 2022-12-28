@@ -3,11 +3,7 @@ import express from "express";
 import cors from "cors";
 import { PORT } from "./configs.js";
 import { addNewsToDB, getNewsFromDB } from "./db.js";
-import { redisConfigs } from "./configs.js";
-import { createClient } from "redis";
-
-// create redis client
-const redisClient = createClient(redisConfigs);
+import { getNewsFromCache, deleteNewsFromCache } from "./redis.js";
 
 // base express app
 const app = express();
@@ -21,20 +17,14 @@ app.get("/", (_, res) => res.status(200).send("Hello World!"));
 // '/get' endpoint to get all news
 app.get("/get", async (_, res) => {
   try {
-    // check if there is any news in the cache
-    await redisClient.connect();
-    /** add missing line below 👇 */
-    const cachedNewsString = "";
-    if (!cachedNewsString) {
-      // if there is no news in the cache, get it from the database
-      const data = await getNewsFromDB();
-      res.status(200).send(data);
-      // add the news to the cache
-      /** add missing line here */
+    // get the news from the cache
+    const cachedNews = await getNewsFromCache();
+    if (!cachedNews) {
+      const news = await getNewsFromDB();
+      res.status(200).send(news);
+      return await addNewsToCache(news);
     }
-    const data = JSON.parse(cachedNewsString);
-    res.status(200).send(data);
-    return await redisClient.disconnect();
+    res.status(200).send(cachedNews);
   } catch (error) {
     res.status(500).send({ message: "Error getting news" });
   }
@@ -46,11 +36,7 @@ app.post("/create", async (req, res) => {
     const { text } = req.body;
     await addNewsToDB(text);
     res.status(201).send({ message: "News created successfully" });
-
-    // delete the news from the cache
-    await redisClient.connect();
-    /** add missing line here */
-    return await redisClient.disconnect();
+    await deleteNewsFromCache();
   } catch (error) {
     res.status(500).send({ message: "Error creating news" });
   }
