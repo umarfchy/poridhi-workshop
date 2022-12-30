@@ -1,1 +1,1 @@
-# microservice-workshop
+# poridhi-workshop
